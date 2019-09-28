@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
+import { connect } from 'react-redux';
+import { loadNotes } from './Store/actions/noteActions';
+import NoteList from './components/NotesList';
+import { Container, Row, Col } from 'reactstrap';
 
 class App extends Component {
   constructor(props){
@@ -10,19 +14,30 @@ class App extends Component {
   }
 
   componentDidMount(){
-    fetch('http://127.0.0.1:8000/api/v1/notes')
-    .then(res => res.json())
-    .then(data => {
-      this.setState({ notes: data })
-    })
+    this.props.loadNotes()
   }
   render() {
     return (
-      <div className="App">
-       Notes App!!
-      </div>
+      <Container className="App">
+        <Row>
+          <Col xs={12}>
+            <h1>Notes App!!</h1>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={4}>
+            <NoteList/>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    loadNotes: () => dispatch(loadNotes())
+  }
+}
+
+export default connect(null, mapDispatchToProps)(App)
